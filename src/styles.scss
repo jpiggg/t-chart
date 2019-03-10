@@ -1,0 +1,21 @@
+#canvas {
+    // border-top: solid 1px #777;
+}
+
+.canvas-wrapper {
+    width: 700px;
+    height: 400px;
+    position: relative;
+    margin-top: 70px;
+}
+
+.tchrt {
+    &_y-root {
+        display: flex;
+        flex-direction: column;
+        position: absolute;
+        top: calc(0px + -15%);
+        bottom: 0;
+        justify-content: space-around;
+    }
+}
