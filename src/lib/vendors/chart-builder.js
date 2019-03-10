@@ -1,11 +1,11 @@
+import { getTimestamp, getDateFromTimestamp } from '../helpers/time';
+/**
+ * Class for build chart
+ * @class
+ * @constructor
+ * @private
+ */
 export class ChartBuilder {
-    /**
-     * _initialized will be `true` when Tchart was inited
-     * @type {boolean} _initialized
-     * @type {string} canvas
-     * @type {boolean} interactiveLineVisible
-     */
-
      constructor(canvas, paths, minCount, maxCount) {
          this.constructor.canvas = canvas;
          this.constructor.minCount = minCount;
@@ -17,8 +17,8 @@ export class ChartBuilder {
 
      static _build = () => {
         this._buildOrdinates();
-        // this.buildTimeline();
-        // this.buildPath();
+        this._buildTimeline();
+        // this._buildPath();
      }
 
     static _buildLines = () => {
@@ -33,31 +33,30 @@ export class ChartBuilder {
 
         const ratio = height / dotes[dotes.length - 1];
         const ordinates = dotes.map(dote => dote * ratio + .5);
-        const ctx = this.canvas.getContext('2d');
-        ctx.lineWidth = 1;
-        ctx.beginPath();
+
+        this.ctx = this.canvas.getContext('2d');
+        this.ctx.lineWidth = 1;
+        this.ctx.beginPath();
         ordinates.map(yPath => {
-            ctx.moveTo(0, yPath);
-            ctx.lineTo(width, yPath);
-            ctx.stroke();
-            ctx.closePath();
+            this.ctx.moveTo(0, yPath);
+            this.ctx.lineTo(width, yPath);
+            this.ctx.stroke();
+            this.ctx.closePath();
 
             return null;
         });
 
         // Drawing last path
         const lastOrdinate = ordinates[ordinates.length - 1] -1;
-        ctx.moveTo(0, lastOrdinate);
-        ctx.lineTo(width, lastOrdinate);
-        ctx.stroke();
-        ctx.closePath();
+        this.ctx.moveTo(0, lastOrdinate);
+        this.ctx.lineTo(width, lastOrdinate);
+        this.ctx.stroke();
+        this.ctx.closePath();
 
         this.dotes = dotes.reverse();
     }
 
     static _buildDotes = () => {
-        console.log('-----ChartBuilder------------', this.dotes);
-
         const parentElem = this.canvas.parentElement;
         const dotesContainer = document.createElement('div');
         dotesContainer.className = 'tchrt_y-root';
@@ -75,5 +74,34 @@ export class ChartBuilder {
     static _buildOrdinates = () => {
         this._buildLines();
         this._buildDotes();
+    }
+
+    static _buildTimeline = () => {
+        const getMaxNumber = (a, b) => a > b ? a : b;
+        const getMinNumber = (a, b) => a > b ? b : a;
+        const minDate = '';
+        const maxDate = '';
+        const distance = '';
+
+        const minNumbers = this.paths.map(obj => {
+            //число 
+            let mins = [];
+            let maxs = [];
+
+            const test = Object.keys(obj).reduce((prevDate, date, index) => {
+                // console.log('----prevDate date ----', prevDate, date);
+                const min = getMinNumber(prevDate, getTimestamp(date));
+                const max = getMaxNumber(prevDate, getTimestamp(date));
+
+                return {min: min, max: max};
+        }, getTimestamp('20.02'))
+
+        console.log('------obj---', test);
+        // число, число -> [число, число]
+        });
+
+        // const minNumber = getDateFromTimestamp(getMinNumber(...minNumbers));
+
+        // console.log('------minNumber------------', minNumbers, minNumber);
     }
 };
